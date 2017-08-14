@@ -55,6 +55,8 @@ void ofApp::setup(){
 
   
   noisex0 = 0;
+  
+  guiDraw = true;
 }
 //--------------------------------------------------------------
 void ofApp::update(){
@@ -120,11 +122,16 @@ void ofApp::draw(){
 //  ofDrawBitmapString(ofToString(cmax.getNoise()), 20, 110);
 //  ofDrawBitmapString(ofToString(cmin.getNoise()), 20, 140);
   
-  gui.draw();
+  if (guiDraw) {
+    gui.draw();
+  }
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+  if (key == 'g') {
+    guiDraw = !guiDraw;
+  }
 
 }
 

@@ -35,6 +35,7 @@ class ofApp : public ofBaseApp{
   ofParameter<float> addy;
   ofParameter<bool> useBrightness;
 
+  bool guiDraw;
   
   ofxNoise nscale;
   ofxNoise nx;
