@@ -12,8 +12,8 @@ void ofApp::setup(){
   cmin.setup(0.01, 255);
   nys.setup(0.01, 1);
   
-  mesh.setMode(OF_PRIMITIVE_TRIANGLES);
-//      mesh.setMode(OF_PRIMITIVE_LINES);
+//  mesh.setMode(OF_PRIMITIVE_TRIANGLES);
+      mesh.setMode(OF_PRIMITIVE_LINES);
 //      mesh.setMode(OF_PRIMITIVE_POINTS);
   
   step = 5;
@@ -52,9 +52,14 @@ void ofApp::setup(){
   gui.add(addy.set("add y", 0.5, 0, 1));
   gui.add(addh.set("hue pos", 0, 0, 255));
   gui.add(useBrightness.set("b", false));
+  gui.add(saturation.set("saturation", 255, 0, 255));
+  gui.add(zheight.set("z height", 1, 0, 10));
+
 
   
   noisex0 = 0;
+  
+  cam.setScale(1,-1,1);
   
   guiDraw = true;
 }
@@ -65,7 +70,6 @@ void ofApp::update(){
   for (int y = 0; y < height; y++) {
     noisex = noisex0;
     for (int x = 0; x < width; x++) {
-//      int h = ofMap(ofNoise(x*ns.getNoise() + noisex, y*ns.getNoise() + noisey), 0, 1, cmin.getNoise(), cmin.getNoise()+cmax.getNoise()) + y*nys.getNoise();
       int h = ofMap(ofNoise(x*nscale.getNoise() + noisex, y*nscale.getNoise() + noisey), 0, 1, cmin.getNoise(), cmin.getNoise()+cmax.getNoise()) + y*addy + addh;
       
       int b = ofMap(ofNoise(x*nscale.getNoise() + noisex, y*nscale.getNoise() + noisey), 0, 1, 0, 255);
@@ -74,13 +78,17 @@ void ofApp::update(){
         h -= 255;
       }
       
+      ofVec3f v = ofVec3f(x*step, y*step, b*zheight);
+
+      
       ofColor c;
       if(useBrightness) {
-        c = ofColor::fromHsb(h, 255, b);
+        c = ofColor::fromHsb(h, saturation, b);
       } else {
-        c = ofColor::fromHsb(h, 255, 255);
+        c = ofColor::fromHsb(h, saturation, 255);
       }
 
+//      mesh.setVertex(x + y * width, v);
       mesh.setColor(x + y * width, c);
       noisex += nx.getNoise();
     }
@@ -113,7 +121,13 @@ void ofApp::noiseUpdate() {
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+  ofEnableDepthTest();
+  cam.begin();
+  
+  ofSetColor(255, 255, 255);
   mesh.draw();
+  
+  cam.end();
   
 //  ofSetColor(255);
 //  ofDrawBitmapString(ofToString(nscale.getNoise()), 20, 20);
@@ -123,6 +137,8 @@ void ofApp::draw(){
 //  ofDrawBitmapString(ofToString(cmin.getNoise()), 20, 140);
   
   if (guiDraw) {
+    ofDisableDepthTest();
+    ofSetColor(255, 255, 255);
     gui.draw();
   }
 }
@@ -131,6 +147,15 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
   if (key == 'g') {
     guiDraw = !guiDraw;
+  }
+  if (key == '0') {
+    mesh.setMode(OF_PRIMITIVE_LINES);
+  }
+  if (key == '1') {
+    mesh.setMode(OF_PRIMITIVE_POINTS);
+  }
+  if (key == '2') {
+    mesh.setMode(OF_PRIMITIVE_TRIANGLES);
   }
 
 }

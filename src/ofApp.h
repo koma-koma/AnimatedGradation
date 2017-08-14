@@ -34,6 +34,10 @@ class ofApp : public ofBaseApp{
   ofParameter<int> addh;
   ofParameter<float> addy;
   ofParameter<bool> useBrightness;
+  
+  ofParameter<float> saturation;
+  ofParameter<float> zheight;
+
 
   bool guiDraw;
   
@@ -53,6 +57,8 @@ class ofApp : public ofBaseApp{
   
   int width;
   int height;
+  
+  ofEasyCam cam;
   
 };
 
